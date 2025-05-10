@@ -587,3 +587,26 @@ async def check_plans_cmd(client, message):
         await message.reply_text(f"**😢 You Don't Have Any Premium Subscription.\n\n Check Out Our Premium /plans**",reply_markup=reply_markup)
         await asyncio.sleep(2)
         await m.delete()
+
+@Client.on_message(filters.private & filters.command("pm_search") & filters.user(ADMINS))
+async def set_pm_search(client, message):
+    bot_id = client.me.id
+    try:
+        option = message.text.split(" ", 1)[1].strip().lower()
+        enable_status = option in ['on', 'true']
+    except (IndexError, ValueError):
+        await message.reply_text("<b>💔 Invalid option. Please send 'on' or 'off' after the command..</b>")
+        return
+    try:
+        await db.update_pm_search_status(bot_id, enable_status)
+        response_text = (
+            "<b> ᴘᴍ ꜱᴇᴀʀᴄʜ ᴇɴᴀʙʟᴇᴅ ✅</b>" if enable_status 
+            else "<b> ᴘᴍ ꜱᴇᴀʀᴄʜ ᴅɪꜱᴀʙʟᴇᴅ ❌</b>"
+        )
+        await message.reply_text(response_text)
+    except Exception as e:
+        await client.send_message(
+            chat_id=LOG_CHANNEL, 
+            text=f"<b>⚠️ Error Log:</b>\n<code>Error in set_pm_search: {e}</code>"
+        )
+        await message.reply_text(f"<b>❗ An error occurred: {e}</b>")

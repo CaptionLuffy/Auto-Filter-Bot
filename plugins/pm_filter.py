@@ -126,7 +126,8 @@ async def give_filter(client, message):
 
 @Client.on_message(filters.private & filters.text)
 async def pm_search(client, message):
-    if PM_SEARCH:
+    pm_search = await db.pm_search_status(client.me.id)
+    if pm_search:
         await auto_filter(client, message)
     else:
         files, n_offset, total = await get_search_results(message.text)

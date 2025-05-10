@@ -1,12 +1,13 @@
 pyrofork==2.3.45
 tgcrypto
-pymongo[srv]>=3.12
-motor>=3.6
-marshmallow
-umongo
+pymongo>=4.12
+motor>=3.7.0
+marshmallow==3.26.1
+umongo==3.1.0
 pytz
 git+https://github.com/Joelkb/cinemagoer
 shortzy
+requests
 aiohttp
 aiofiles
 speedtest-cli
