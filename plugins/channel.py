@@ -17,5 +17,5 @@ async def media(bot, message):
     if media.mime_type in ['video/mp4', 'video/x-matroska']:  # Non .mp4 and .mkv files are skipped
         media.file_type = message.media.value
         media.caption = message.caption
-        await save_file(media)
+        await save_file(message, media)
 
