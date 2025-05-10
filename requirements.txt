@@ -7,6 +7,7 @@ umongo==3.1.0
 pytz
 git+https://github.com/Joelkb/cinemagoer
 shortzy
+requests
 aiohttp
 aiofiles
 speedtest-cli
