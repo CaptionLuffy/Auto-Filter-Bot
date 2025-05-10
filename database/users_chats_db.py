@@ -37,6 +37,7 @@ class Database:
         self.col = mydb.Users
         self.grp = mydb.Groups
         self.users = mydb.uersz
+        self.botcol = mydb.bot_settings
 
     def new_user(self, id, name):
         return dict(
@@ -203,5 +204,22 @@ class Database:
         expiry_time = datetime.datetime.now() + datetime.timedelta(seconds=seconds)
         user_data = {"id": user_id, "expiry_time": expiry_time, "has_free_trial": True}
         await self.users.update_one({"id": user_id}, {"$set": user_data}, upsert=True)
+        
+    async def get_bot_setting(self, bot_id, setting_key, default_value):
+        bot = await self.botcol.find_one({'id': int(bot_id)}, {setting_key: 1, '_id': 0})
+        return bot[setting_key] if bot and setting_key in bot else default_value
+        
+    async def update_bot_setting(self, bot_id, setting_key, value):
+        await self.botcol.update_one(
+            {'id': int(bot_id)}, 
+            {'$set': {setting_key: value}}, 
+            upsert=True
+        )
+        
+    async def pm_search_status(self, bot_id):
+        return await self.get_bot_setting(bot_id, 'PM_SEARCH', PM_SEARCH)
+
+    async def update_pm_search_status(self, bot_id, enable):
+        await self.update_bot_setting(bot_id, 'PM_SEARCH', enable)
         
 db = Database()
